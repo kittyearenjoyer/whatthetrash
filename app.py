@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import torch
 from transformers import AutoImageProcessor, AutoModelForImageClassification
+from transformers import AutoFeatureExtractor
 
 # --- CONFIG ---
 MODEL_NAME = "tahzaya/trash-sorter-ai"
@@ -14,7 +15,7 @@ st.write("Lade ein Bild hoch – die KI sagt dir, was es ist und wie du es entso
 # --- LOAD MODEL (cached) ---
 @st.cache_resource
 def load_model():
-    processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
+    processor = AutoFeatureExtractor.from_pretrained(MODEL_NAME)
     model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
     return processor, model
 
