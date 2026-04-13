@@ -1,4 +1,7 @@
 streamlit
 torch
-transformers
+torchvision
+transformers==4.37.2
 Pillow
+timm
+accelerate
