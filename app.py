@@ -1,11 +1,9 @@
 import streamlit as st
 from PIL import Image
-import torch
-import torchvision.transforms as transforms
-from transformers import AutoModelForImageClassification
+from transformers import pipeline
 
 # --- CONFIG ---
-MODEL_NAME = "tahzaya/trash-sorter-ai"
+MODEL_NAME = "yangy50/garbage-classification"
 
 st.set_page_config(page_title="Trash AI", layout="centered")
 
@@ -15,18 +13,9 @@ st.write("Lade ein Bild hoch – die KI erkennt den Müll und sagt dir, wo er hi
 # --- LOAD MODEL ---
 @st.cache_resource
 def load_model():
-    model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
-    model.eval()
+    return pipeline("image-classification", model=MODEL_NAME)
 
-    # Manuelles Preprocessing (kein HF Processor nötig)
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-    ])
-
-    return model, transform
-
-model, transform = load_model()
+classifier = load_model()
 
 # --- FILE UPLOAD ---
 uploaded_file = st.file_uploader("Bild hochladen", type=["jpg", "jpeg", "png"])
@@ -35,27 +24,24 @@ if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Dein Bild", use_column_width=True)
 
-    # --- PREPROCESS ---
-    img_tensor = transform(image).unsqueeze(0)
-
     # --- INFERENCE ---
-    with torch.no_grad():
-        outputs = model(img_tensor)
-        logits = outputs.logits
-        predicted_class_id = logits.argmax(-1).item()
+    with st.spinner("Analysiere Bild..."):
+        results = classifier(image)
 
-    label = model.config.id2label[predicted_class_id]
+    top_result = results[0]
+    label = top_result["label"]
+    score = top_result["score"]
 
-    # --- OUTPUT ---
-    st.success(f"Erkannt: **{label}**")
+    st.success(f"Erkannt: **{label}** ({score:.2%})")
 
-    # --- Mülltrennung (simple Logik) ---
+    # --- Mülltrennung ---
     disposal_map = {
         "plastic": "Gelbe Tonne 🟡",
         "paper": "Blaue Tonne 🔵",
+        "cardboard": "Blaue Tonne 🔵",
         "glass": "Glascontainer 🟢",
         "metal": "Gelbe Tonne 🟡",
-        "organic": "Biotonne 🟤",
+        "trash": "Restmüll ⚫",
     }
 
     lower_label = label.lower()
