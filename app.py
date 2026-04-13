@@ -1,8 +1,8 @@
 import streamlit as st
 from PIL import Image
 import torch
-from transformers import AutoImageProcessor, AutoModelForImageClassification
-from transformers import AutoFeatureExtractor
+import torchvision.transforms as transforms
+from transformers import AutoModelForImageClassification
 
 # --- CONFIG ---
 MODEL_NAME = "tahzaya/trash-sorter-ai"
@@ -10,16 +10,23 @@ MODEL_NAME = "tahzaya/trash-sorter-ai"
 st.set_page_config(page_title="Trash AI", layout="centered")
 
 st.title("♻️ AI Mülltrenner")
-st.write("Lade ein Bild hoch – die KI sagt dir, was es ist und wie du es entsorgen solltest.")
+st.write("Lade ein Bild hoch – die KI erkennt den Müll und sagt dir, wo er hin gehört.")
 
-# --- LOAD MODEL (cached) ---
+# --- LOAD MODEL ---
 @st.cache_resource
 def load_model():
-    processor = AutoFeatureExtractor.from_pretrained(MODEL_NAME)
     model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
-    return processor, model
+    model.eval()
 
-processor, model = load_model()
+    # Manuelles Preprocessing (kein HF Processor nötig)
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+    ])
+
+    return model, transform
+
+model, transform = load_model()
 
 # --- FILE UPLOAD ---
 uploaded_file = st.file_uploader("Bild hochladen", type=["jpg", "jpeg", "png"])
@@ -29,11 +36,11 @@ if uploaded_file:
     st.image(image, caption="Dein Bild", use_column_width=True)
 
     # --- PREPROCESS ---
-    inputs = processor(images=image, return_tensors="pt")
+    img_tensor = transform(image).unsqueeze(0)
 
     # --- INFERENCE ---
     with torch.no_grad():
-        outputs = model(**inputs)
+        outputs = model(img_tensor)
         logits = outputs.logits
         predicted_class_id = logits.argmax(-1).item()
 
@@ -42,7 +49,7 @@ if uploaded_file:
     # --- OUTPUT ---
     st.success(f"Erkannt: **{label}**")
 
-    # Optional einfache Müll-Logik
+    # --- Mülltrennung (simple Logik) ---
     disposal_map = {
         "plastic": "Gelbe Tonne 🟡",
         "paper": "Blaue Tonne 🔵",
