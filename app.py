@@ -6,7 +6,7 @@ from transformers import pipeline
 MODEL_NAME = "yangy50/garbage-classification"
 
 st.set_page_config(
-    page_title="Trash AI",
+    page_title="What the trash",
     page_icon="♻️",
     layout="wide",
 )
@@ -110,7 +110,7 @@ def run_prediction(image):
 # ---------------- HERO ----------------
 st.markdown("""
 <div class="hero-box">
-    <h1 style="margin-bottom:0.4rem;">♻️ Trash AI</h1>
+    <h1 style="margin-bottom:0.4rem;">♻️ What the trash</h1>
     <p style="font-size:1.15rem; margin-bottom:0;">
         Moderne KI zur Müllklassifizierung per Upload oder Webcam.
         Schnell, simpel und smart.
