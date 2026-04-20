@@ -14,6 +14,8 @@ st.set_page_config(
 # ---------------- MODERN UI CSS ----------------
 st.markdown("""
 <style>
+
+/* ---------- Hintergrund ---------- */
 .main {
     background: linear-gradient(180deg, #f8fafc 0%, #e5e7eb 100%);
 }
@@ -23,11 +25,12 @@ st.markdown("""
     max-width: 1100px;
 }
 
-/* ALLE TEXTE SCHWARZ */
+/* ---------- Alle Texte schwarz ---------- */
 html, body, p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: black !important;
 }
 
+/* ---------- Hero ---------- */
 .hero-box {
     padding: 2.5rem;
     border-radius: 24px;
@@ -36,6 +39,7 @@ html, body, p, span, div, label, h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1.5rem;
 }
 
+/* ---------- Cards ---------- */
 .glass-card {
     background: rgba(255,255,255,0.75);
     border: 1px solid rgba(0,0,0,0.08);
@@ -57,6 +61,7 @@ html, body, p, span, div, label, h1, h2, h3, h4, h5, h6 {
     font-size: 0.95rem;
 }
 
+/* ---------- Buttons ---------- */
 .stButton>button {
     width: 100%;
     border-radius: 14px;
@@ -66,6 +71,7 @@ html, body, p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: black !important;
 }
 
+/* ---------- Upload + Kamera ---------- */
 [data-testid="stFileUploader"] {
     background: rgba(255,255,255,0.65);
     padding: 1rem;
@@ -77,6 +83,34 @@ html, body, p, span, div, label, h1, h2, h3, h4, h5, h6 {
     padding: 1rem;
     border-radius: 18px;
 }
+
+/* ---------- Tabs ---------- */
+button[data-baseweb="tab"] {
+    font-size: 16px;
+    font-weight: 600;
+    color: black !important;
+    padding-bottom: 10px;
+}
+
+div[data-testid="stTabs"] {
+    margin-bottom: -12px;
+}
+
+/* ---------- Weiße leere Box entfernen ---------- */
+div[data-testid="stTabs"] + div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+}
+
+/* ---------- Allgemein unnötige weiße Flächen killen ---------- */
+section.main > div {
+    background: transparent !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
