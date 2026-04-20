@@ -24,7 +24,7 @@ st.markdown("""
 }
 
 h1, h2, h3, p, label, div {
-    color: white;
+    color: black;
 }
 
 .hero-box {
