@@ -7,8 +7,8 @@ MODEL_NAME = "yangy50/garbage-classification"
 
 st.set_page_config(page_title="Trash AI", layout="centered")
 
-st.title("♻️ AI Mülltrenner")
-st.write("Lade ein Bild hoch – die KI erkennt den Müll und sagt dir, wo er hin gehört.")
+st.title("♻️ Trash AI")
+st.write("Bild hochladen oder Webcam nutzen.")
 
 # --- LOAD MODEL ---
 @st.cache_resource
@@ -17,24 +17,16 @@ def load_model():
 
 classifier = load_model()
 
-# --- FILE UPLOAD ---
-uploaded_file = st.file_uploader("Bild hochladen", type=["jpg", "jpeg", "png"])
+# --- Prediction Function ---
+def predict_image(image):
+    results = classifier(image)
+    top = results[0]
 
-if uploaded_file:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Dein Bild", use_column_width=True)
+    label = top["label"]
+    score = top["score"]
 
-    # --- INFERENCE ---
-    with st.spinner("Analysiere Bild..."):
-        results = classifier(image)
+    st.success(f"Erkannt: **{label}** ({score:.1%})")
 
-    top_result = results[0]
-    label = top_result["label"]
-    score = top_result["score"]
-
-    st.success(f"Erkannt: **{label}** ({score:.2%})")
-
-    # --- Mülltrennung ---
     disposal_map = {
         "plastic": "Gelbe Tonne 🟡",
         "paper": "Blaue Tonne 🔵",
@@ -44,14 +36,37 @@ if uploaded_file:
         "trash": "Restmüll ⚫",
     }
 
-    lower_label = label.lower()
     found = False
-
     for key in disposal_map:
-        if key in lower_label:
+        if key in label.lower():
             st.info(f"➡️ Entsorgung: {disposal_map[key]}")
             found = True
             break
 
     if not found:
-        st.warning("Keine klare Entsorgung erkannt – bitte lokal prüfen.")
+        st.warning("Bitte lokal prüfen.")
+
+# --- TABS ---
+tab1, tab2 = st.tabs(["📁 Upload", "📷 Webcam"])
+
+# ---------- Upload ----------
+with tab1:
+    uploaded_file = st.file_uploader("Bild hochladen", type=["jpg", "jpeg", "png"])
+
+    if uploaded_file:
+        image = Image.open(uploaded_file).convert("RGB")
+        st.image(image, caption="Dein Bild", use_column_width=True)
+
+        with st.spinner("Analysiere..."):
+            predict_image(image)
+
+# ---------- Webcam ----------
+with tab2:
+    camera_image = st.camera_input("Foto machen")
+
+    if camera_image:
+        image = Image.open(camera_image).convert("RGB")
+        st.image(image, caption="Webcam Bild", use_column_width=True)
+
+        with st.spinner("Analysiere..."):
+            predict_image(image)
