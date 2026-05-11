@@ -1,3 +1,7 @@
+import io
+import os
+import tempfile
+
 import streamlit as st
 from PIL import Image
 from transformers import pipeline
@@ -117,26 +121,15 @@ section.main > div {
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    import torch
-    # Try PyTorch first, fall back to TensorFlow if unavailable
-    try:
-        import torch
-        clf = pipeline(
-            "image-classification",
-            model=MODEL_NAME,
-            device=-1,
-            framework="pt",
-        )
-        return clf, "pt"
-    except Exception:
-        clf = pipeline(
-            "image-classification",
-            model=MODEL_NAME,
-            framework="tf",
-        )
-        return clf, "tf"
+    clf = pipeline(
+        "image-classification",
+        model=MODEL_NAME,
+        device=-1,
+        framework="pt",
+    )
+    return clf
 
-classifier, _framework = load_model()
+classifier = load_model()
 
 # ---------------- HELPERS ----------------
 def get_disposal(label: str) -> str:
@@ -155,17 +148,23 @@ def get_disposal(label: str) -> str:
 
 
 def run_prediction(image: Image.Image):
-    import numpy as np
-    # Convert PIL → numpy so transformers doesn't need torchvision's decode path
-    img_array = np.array(image.convert("RGB"))
-    results = classifier(img_array)
+    # transformers 4.41.2 load_image() only accepts: PIL.Image, str path, or URL.
+    # Save to a temp file and pass the path — most reliable across all versions.
+    img = image.convert("RGB")
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+        img.save(tmp, format="JPEG")
+        tmp_path = tmp.name
+    try:
+        results = classifier(tmp_path)
+    finally:
+        os.unlink(tmp_path)
     top = results[0]
     return top["label"], top["score"]
 
 
 def show_results(image: Image.Image):
     """Display image + prediction results."""
-    st.image(image, use_container_width=True)   # FIX: use_column_width → use_container_width
+    st.image(image, use_container_width=True)
     with st.spinner("KI analysiert Bild..."):
         label, score = run_prediction(image)
     disposal = get_disposal(label)
