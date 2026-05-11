@@ -117,30 +117,46 @@ section.main > div {
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    return pipeline("image-classification", model=MODEL_NAME)
+    return pipeline(
+        "image-classification",
+        model=MODEL_NAME,
+        device=-1,  # CPU; change to 0 for GPU
+    )
 
 classifier = load_model()
 
 # ---------------- HELPERS ----------------
-def get_disposal(label):
+def get_disposal(label: str) -> str:
     disposal_map = {
         "plastic": "Gelbe Tonne 🟡",
-        "paper": "Blaue Tonne 🔵",
+        "paper":   "Blaue Tonne 🔵",
         "cardboard": "Blaue Tonne 🔵",
-        "glass": "Glascontainer 🟢",
-        "metal": "Gelbe Tonne 🟡",
-        "trash": "Restmüll ⚫",
+        "glass":   "Glascontainer 🟢",
+        "metal":   "Gelbe Tonne 🟡",
+        "trash":   "Restmüll ⚫",
     }
-
-    for key in disposal_map:
+    for key, value in disposal_map.items():
         if key in label.lower():
-            return disposal_map[key]
-
+            return value
     return "Lokal prüfen 📍"
 
-def run_prediction(image):
-    result = classifier(image)[0]
-    return result["label"], result["score"]
+
+def run_prediction(image: Image.Image):
+    results = classifier(image)
+    top = results[0]
+    return top["label"], top["score"]
+
+
+def show_results(image: Image.Image):
+    """Display image + prediction results."""
+    st.image(image, use_container_width=True)   # FIX: use_column_width → use_container_width
+    with st.spinner("KI analysiert Bild..."):
+        label, score = run_prediction(image)
+    disposal = get_disposal(label)
+    st.success(f"Erkannt: **{label}**")
+    st.info(f"Sicherheit: {score:.1%}")
+    st.warning(f"Entsorgung: {disposal}")
+
 
 # ---------------- HERO ----------------
 st.markdown("""
@@ -154,13 +170,10 @@ st.markdown("""
 
 # ---------------- STATS ----------------
 col1, col2, col3 = st.columns(3)
-
 with col1:
     st.markdown('<div class="metric-box"><h3>6+</h3><div class="small-text">Kategorien</div></div>', unsafe_allow_html=True)
-
 with col2:
     st.markdown('<div class="metric-box"><h3>AI</h3><div class="small-text">Bildanalyse</div></div>', unsafe_allow_html=True)
-
 with col3:
     st.markdown('<div class="metric-box"><h3>Webcam</h3><div class="small-text">Live Nutzung</div></div>', unsafe_allow_html=True)
 
@@ -172,43 +185,19 @@ tab1, tab2 = st.tabs(["📁 Upload", "📷 Webcam"])
 # -------- Upload --------
 with tab1:
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-
     uploaded_file = st.file_uploader("Bild hochladen", type=["jpg", "jpeg", "png"])
-
-    if uploaded_file:
+    if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, use_column_width=True)
-
-        with st.spinner("KI analysiert Bild..."):
-            label, score = run_prediction(image)
-
-        disposal = get_disposal(label)
-
-        st.success(f"Erkannt: {label}")
-        st.info(f"Sicherheit: {score:.1%}")
-        st.warning(f"Entsorgung: {disposal}")
-
+        show_results(image)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # -------- Webcam --------
 with tab2:
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-
     camera_image = st.camera_input("Foto aufnehmen")
-
-    if camera_image:
+    if camera_image is not None:
         image = Image.open(camera_image).convert("RGB")
-        st.image(image, use_column_width=True)
-
-        with st.spinner("KI analysiert Bild..."):
-            label, score = run_prediction(image)
-
-        disposal = get_disposal(label)
-
-        st.success(f"Erkannt: {label}")
-        st.info(f"Sicherheit: {score:.1%}")
-        st.warning(f"Entsorgung: {disposal}")
-
+        show_results(image)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------- FOOTER ----------------
