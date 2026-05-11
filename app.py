@@ -1,7 +1,8 @@
 import streamlit as st
 from PIL import Image
 import torch
-from transformers import AutoFeatureExtractor, AutoModelForImageClassification
+import numpy as np
+from transformers import AutoModelForImageClassification
 
 # ---------------- CONFIG ----------------
 MODEL_NAME = "yangy50/garbage-classification"
@@ -12,7 +13,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# ---------------- MODERN UI CSS ----------------
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
 .main { background: linear-gradient(180deg, #f8fafc 0%, #e5e7eb 100%); }
@@ -52,12 +53,23 @@ section.main > div { background: transparent !important; }
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    extractor = AutoFeatureExtractor.from_pretrained(MODEL_NAME)
     model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
     model.eval()
-    return extractor, model
+    return model
 
-extractor, model = load_model()
+model = load_model()
+
+# ViT-base/16 normalization constants (ImageNet)
+_MEAN = torch.tensor([0.5, 0.5, 0.5]).view(3, 1, 1)
+_STD  = torch.tensor([0.5, 0.5, 0.5]).view(3, 1, 1)
+
+def preprocess(image: Image.Image) -> torch.Tensor:
+    """PIL → (1, 3, 224, 224) float tensor, no torchvision needed."""
+    img = image.convert("RGB").resize((224, 224), Image.BICUBIC)
+    arr = np.array(img, dtype=np.float32) / 255.0          # HWC, [0,1]
+    t   = torch.from_numpy(arr).permute(2, 0, 1)           # CHW
+    t   = (t - _MEAN) / _STD                               # normalize
+    return t.unsqueeze(0)                                   # BCHW
 
 # ---------------- HELPERS ----------------
 def get_disposal(label: str) -> str:
@@ -74,17 +86,14 @@ def get_disposal(label: str) -> str:
             return value
     return "Lokal prüfen 📍"
 
-
 def run_prediction(image: Image.Image):
-    img = image.convert("RGB").resize((224, 224))
-    inputs = extractor(images=img, return_tensors="pt")
+    tensor = preprocess(image)
     with torch.no_grad():
-        logits = model(**inputs).logits
-    predicted_idx = logits.argmax(-1).item()
-    label = model.config.id2label[predicted_idx]
-    score = torch.softmax(logits, dim=-1)[0][predicted_idx].item()
+        logits = model(pixel_values=tensor).logits
+    idx   = logits.argmax(-1).item()
+    label = model.config.id2label[idx]
+    score = torch.softmax(logits, dim=-1)[0][idx].item()
     return label, score
-
 
 def show_results(image: Image.Image):
     st.image(image, use_container_width=True)
@@ -94,7 +103,6 @@ def show_results(image: Image.Image):
     st.success(f"Erkannt: **{label}**")
     st.info(f"Sicherheit: {score:.1%}")
     st.warning(f"Entsorgung: {disposal}")
-
 
 # ---------------- HERO ----------------
 st.markdown("""
@@ -115,7 +123,7 @@ with col3:
 
 st.write("")
 
-# ---------------- INPUT AREA ----------------
+# ---------------- TABS ----------------
 tab1, tab2 = st.tabs(["📁 Upload", "📷 Webcam"])
 
 with tab1:
