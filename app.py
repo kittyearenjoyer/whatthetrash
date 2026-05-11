@@ -117,23 +117,36 @@ section.main > div {
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    return pipeline(
-        "image-classification",
-        model=MODEL_NAME,
-        device=-1,  # CPU; change to 0 for GPU
-    )
+    import torch
+    # Try PyTorch first, fall back to TensorFlow if unavailable
+    try:
+        import torch
+        clf = pipeline(
+            "image-classification",
+            model=MODEL_NAME,
+            device=-1,
+            framework="pt",
+        )
+        return clf, "pt"
+    except Exception:
+        clf = pipeline(
+            "image-classification",
+            model=MODEL_NAME,
+            framework="tf",
+        )
+        return clf, "tf"
 
-classifier = load_model()
+classifier, _framework = load_model()
 
 # ---------------- HELPERS ----------------
 def get_disposal(label: str) -> str:
     disposal_map = {
-        "plastic": "Gelbe Tonne 🟡",
-        "paper":   "Blaue Tonne 🔵",
+        "plastic":   "Gelbe Tonne 🟡",
+        "paper":     "Blaue Tonne 🔵",
         "cardboard": "Blaue Tonne 🔵",
-        "glass":   "Glascontainer 🟢",
-        "metal":   "Gelbe Tonne 🟡",
-        "trash":   "Restmüll ⚫",
+        "glass":     "Glascontainer 🟢",
+        "metal":     "Gelbe Tonne 🟡",
+        "trash":     "Restmüll ⚫",
     }
     for key, value in disposal_map.items():
         if key in label.lower():
@@ -142,7 +155,10 @@ def get_disposal(label: str) -> str:
 
 
 def run_prediction(image: Image.Image):
-    results = classifier(image)
+    import numpy as np
+    # Convert PIL → numpy so transformers doesn't need torchvision's decode path
+    img_array = np.array(image.convert("RGB"))
+    results = classifier(img_array)
     top = results[0]
     return top["label"], top["score"]
 
