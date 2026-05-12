@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 import torch
-import numpy as np
+
 from transformers import AutoModelForImageClassification
 
 # ---------------- CONFIG ----------------
@@ -60,15 +60,15 @@ def load_model():
 model = load_model()
 
 # ViT-base/16 normalization constants (ImageNet)
-_MEAN = torch.tensor([0.5, 0.5, 0.5]).view(3, 1, 1)
-_STD  = torch.tensor([0.5, 0.5, 0.5]).view(3, 1, 1)
 
 def preprocess(image: Image.Image) -> torch.Tensor:
-    """PIL → (1, 3, 224, 224) float tensor, no torchvision needed."""
+    """PIL → (1, 3, 224, 224) float tensor, pure PIL+torch, no numpy/torchvision."""
     img = image.convert("RGB").resize((224, 224), Image.BICUBIC)
-    arr = np.array(img, dtype=np.float32) / 255.0          # HWC, [0,1]
-    t   = torch.from_numpy(arr).permute(2, 0, 1)           # CHW
-    t   = (t - _MEAN) / _STD                               # normalize
+    pixels = list(img.getdata())                            # [(R,G,B), ...] len=224*224
+    t = torch.tensor(pixels, dtype=torch.float32)          # (50176, 3)
+    t = t / 255.0                                          # [0, 1]
+    t = (t - 0.5) / 0.5                                    # [-1, 1]
+    t = t.view(224, 224, 3).permute(2, 0, 1)               # CHW
     return t.unsqueeze(0)                                   # BCHW
 
 # ---------------- HELPERS ----------------
@@ -142,4 +142,5 @@ with tab2:
 
 # ---------------- FOOTER ----------------
 st.write("")
+st.caption("What the Trash • AI Waste Classifier")
 st.caption("What the Trash • AI Waste Classifier")
