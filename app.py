@@ -7,7 +7,7 @@ MODEL_NAME = "yangy50/garbage-classification"
 
 st.set_page_config(page_title="WASTE_ID.EXE", page_icon="☣️", layout="wide")
 
-# ===================== REVOLUTIONÄRES EPIC DESIGN =====================
+# ===================== ULTIMATIVE CYBERPUNK REVOLUTION =====================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
@@ -20,67 +20,72 @@ html, body, [data-testid="stAppViewContainer"], .main, .block-container {
     font-family: 'Share Tech Mono', monospace !important;
 }
 
-/* === REVOLUTIONÄRER MATRIX BACKGROUND === */
-#matrix-canvas {
+/* === DOUBLE MATRIX RAIN === */
+#matrix-canvas, #matrix-canvas2 {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -3; opacity: 0.6; mix-blend-mode: screen;
+    z-index: -2; opacity: 0.6; mix-blend-mode: screen;
 }
-#matrix-canvas2 {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -2; opacity: 0.25; mix-blend-mode: screen;
-}
+#matrix-canvas2 { z-index: -1; opacity: 0.3; }
 
-/* Intensive Scanlines + Vignette + CRT Effect */
+/* CRT + Vignette + Scanlines */
 body::before {
-    content: ""; position: fixed; inset: 0; z-index: 9997; pointer-events: none;
-    background: radial-gradient(circle at center, rgba(0,255,65,0.08) 0%, transparent 70%);
-    box-shadow: inset 0 0 250px rgba(0,0,0,0.95);
+    content: ""; position: fixed; inset: 0; z-index: 9996; pointer-events: none;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+    box-shadow: inset 0 0 300px rgba(0,0,0,0.9);
 }
 
 body::after {
-    content: ""; position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,65,0.12) 3px, rgba(0,255,65,0.12) 6px);
-    animation: scanroll 5s linear infinite;
-    filter: contrast(1.15) brightness(1.1);
+    content: ""; position: fixed; inset: 0; z-index: 9997; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(0,255,65,0.15) 4px, rgba(0,255,65,0.15) 8px);
+    animation: scanroll 4.5s linear infinite;
+    filter: contrast(1.2) brightness(1.15);
 }
-@keyframes scanroll { 0% { background-position: 0 0; } 100% { background-position: 0 1000px; } }
+@keyframes scanroll { 0% { background-position: 0 0; } 100% { background-position: 0 1200px; } }
 
-/* Ultra Glitch */
+/* EPIC GLITCH */
 @keyframes glitch {
-    0% { text-shadow: 4px 0 #ff00ff, -4px 0 #00ffff, 0 0 20px #00ff41; }
-    20% { text-shadow: -4px 0 #00ff41, 4px 0 #ffff00, 0 0 30px #ff00ff; }
-    40% { text-shadow: 4px 0 #00ffff, -4px 0 #ff00ff, 0 0 25px #00ff41; }
-    100% { text-shadow: 4px 0 #ff00ff, -4px 0 #00ffff, 0 0 20px #00ff41; }
+    0% { text-shadow: 5px 0 #ff00ff, -5px 0 #00ffff; transform: skew(2deg); }
+    25% { text-shadow: -5px 0 #00ff41, 5px 0 #ffff00; }
+    50% { text-shadow: 5px 0 #00ffff, -5px 0 #ff00ff; }
+    100% { text-shadow: 5px 0 #ff00ff, -5px 0 #00ffff; }
 }
 
-.hero-wrap {
-    border: 4px solid #00ff41;
+.hero-container {
+    border: 5px solid #00ff41;
     border-radius: 12px;
-    padding: 3.5rem 4rem;
-    margin: 2rem 0;
+    padding: 2.5rem 3rem;
+    margin: 1.5rem 0 2.5rem 0;
     position: relative;
-    background: linear-gradient(135deg, rgba(0,255,65,0.15), rgba(0,20,10,0.98));
-    box-shadow: 0 0 80px rgba(0,255,65,0.7),
-                0 0 160px rgba(255,0,255,0.3),
-                inset 0 0 100px rgba(0,255,65,0.25);
+    background: linear-gradient(135deg, rgba(0,255,65,0.18), rgba(0,15,8,0.97));
+    box-shadow: 0 0 100px #00ff41,
+                0 0 200px rgba(255,0,255,0.4),
+                inset 0 0 120px rgba(0,255,65,0.3);
     overflow: hidden;
 }
-.hero-wrap::before {
-    content: "WASTE_ID.EXE v5.0 // NEURAL MATRIX CORE ONLINE // DO NOT TRUST THE SYSTEM";
+.hero-container::before {
+    content: "WASTE_ID.EXE v5.1 // NEURAL MATRIX CORE ONLINE // DO NOT TRUST THE SYSTEM";
     position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
-    background: #000; padding: 6px 20px;
-    font-size: 0.85rem; color: #ff0044; letter-spacing: 5px;
-    border: 1px solid #ff0044; white-space: nowrap;
+    background: #000; padding: 8px 25px;
+    font-size: 0.9rem; color: #ff0044; letter-spacing: 6px;
+    border: 2px solid #ff0044; white-space: nowrap;
+    box-shadow: 0 0 20px #ff0044;
 }
 .hero-title {
     font-family: 'Orbitron', monospace;
-    font-size: clamp(3.2rem, 8vw, 5.5rem);
+    font-size: clamp(3.5rem, 9vw, 6rem);
     font-weight: 900;
-    letter-spacing: 18px;
+    letter-spacing: 20px;
     text-transform: uppercase;
-    animation: glitch 0.7s infinite;
-    text-shadow: 0 0 70px #00ff41,
-                 0 0 140px #ff00ff;
+    animation: glitch 0.6s infinite;
+    text-shadow: 0 0 80px #00ff41,
+                 0 0 160px #ff00ff,
+                 0 0 220px #00ffff;
+    margin-bottom: 0.8rem;
+}
+.biohazard {
+    font-size: 4.5rem;
+    filter: drop-shadow(0 0 25px #00ff41);
+    margin-right: 20px;
 }
 </style>
 
@@ -88,62 +93,54 @@ body::after {
 <canvas id="matrix-canvas2"></canvas>
 
 <script>
-// === REVOLUTIONÄRER DOUBLE LAYER MATRIX RAIN ===
-const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d');
-const canvas2 = document.getElementById('matrix-canvas2');
-const ctx2 = canvas2.getContext('2d');
+// === ULTRA MATRIX RAIN ===
+const c1 = document.getElementById('matrix-canvas');
+const ctx1 = c1.getContext('2d');
+const c2 = document.getElementById('matrix-canvas2');
+const ctx2 = c2.getContext('2d');
 
 let w, h;
-const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオカキクケコネオトーキョー$@#%&*█▓▒░";
-const fontSize = 16;
-let drops = [], drops2 = [];
+const chars = "01アイウエオカキクケコネオトーキョー0123456789$@#%&*█▓▒░";
+const fs = 17;
+let drops1 = [], drops2 = [];
 
 function resize() {
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.width = canvas2.width = w;
-    canvas.height = canvas2.height = h;
-    drops = Array(Math.floor(w / fontSize)).fill(1);
-    drops2 = Array(Math.floor(w / fontSize)).fill(1);
+    w = window.innerWidth; h = window.innerHeight;
+    c1.width = c2.width = w; c1.height = c2.height = h;
+    drops1 = Array(Math.floor(w/fs)).fill(1);
+    drops2 = Array(Math.floor(w/fs)).fill(1);
 }
 resize();
 window.addEventListener('resize', resize);
 
-function drawLayer1() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#00ff41';
-    ctx.font = `${fontSize}px monospace`;
-
-    for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > h && Math.random() > 0.96) drops[i] = 0;
-        drops[i]++;
+function draw1() {
+    ctx1.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx1.fillRect(0,0,w,h);
+    ctx1.fillStyle = '#00ff41';
+    ctx1.font = `${fs}px monospace`;
+    for (let i = 0; i < drops1.length; i++) {
+        ctx1.fillText(chars[Math.random()*chars.length|0], i*fs, drops1[i]*fs);
+        if (drops1[i]*fs > h && Math.random() > 0.96) drops1[i] = 0;
+        drops1[i]++;
     }
 }
-
-function drawLayer2() {
-    ctx2.fillStyle = 'rgba(0, 0, 0, 0.12)';
-    ctx2.fillRect(0, 0, w, h);
+function draw2() {
+    ctx2.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx2.fillRect(0,0,w,h);
     ctx2.fillStyle = '#00ff88';
-    ctx2.font = `${fontSize * 0.9}px monospace`;
-
+    ctx2.font = `${fs*0.85}px monospace`;
     for (let i = 0; i < drops2.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx2.fillText(text, i * fontSize, drops2[i] * fontSize * 0.9);
-        if (drops2[i] * fontSize > h && Math.random() > 0.94) drops2[i] = 0;
+        ctx2.fillText(chars[Math.random()*chars.length|0], i*fs, drops2[i]*fs);
+        if (drops2[i]*fs > h && Math.random() > 0.93) drops2[i] = 0;
         drops2[i]++;
     }
 }
-
-setInterval(drawLayer1, 30);
-setInterval(drawLayer2, 42);
+setInterval(draw1, 28);
+setInterval(draw2, 40);
 </script>
 """, unsafe_allow_html=True)
 
-# ===================== MODEL =====================
+# ===================== MODEL (unverändert) =====================
 @st.cache_resource
 def load_model():
     return AutoModelForImageClassification.from_pretrained(MODEL_NAME).eval()
@@ -176,39 +173,41 @@ def run_prediction(image):
 
 def show_results(image):
     st.image(image, use_container_width=True)
-    with st.spinner("[ NEURAL CORE OVERDRIVE ACTIVATED... ]"):
+    with st.spinner("[ NEURAL CORE OVERDRIVE... SCANNING ]"):
         label, score = run_prediction(image)
     disposal = get_disposal(label)
     
     st.markdown(f"""
-    <div style="margin:30px 0;">
-        <div style="border:3px solid #00ff41;color:#00ff41;padding:22px;border-radius:10px;background:rgba(0,50,30,0.7);box-shadow:0 0 30px #00ff41;">
-            <b>NEURAL CLASSIFICATION &gt;&gt;</b> {label.upper()}
+    <div style="margin:30px 0">
+        <div style="border:3px solid #00ff41;color:#00ff41;padding:25px;border-radius:12px;background:rgba(0,60,30,0.8);box-shadow:0 0 35px #00ff41;">
+            <b>CLASS &gt;&gt;</b> {label.upper()}
         </div>
-        <div style="border:3px solid #00ffff;color:#00ffff;padding:22px;margin:15px 0;border-radius:10px;background:rgba(0,40,50,0.7);box-shadow:0 0 30px #00ffff;">
-            <b>CONFIDENCE LEVEL &gt;&gt;</b> {score:.1%}
-            <div style="height:14px;background:#001a00;margin-top:14px;border-radius:7px;overflow:hidden">
-                <div style="height:100%;width:{int(score*100)}%;background:linear-gradient(90deg,#00ff41,#00ffff);box-shadow:0 0 25px #00ffff"></div>
+        <div style="border:3px solid #00ffff;color:#00ffff;padding:25px;margin:18px 0;border-radius:12px;background:rgba(0,45,55,0.8);box-shadow:0 0 35px #00ffff;">
+            <b>CONFIDENCE &gt;&gt;</b> {score:.1%}
+            <div style="height:16px;background:#001a00;margin-top:16px;border-radius:8px;overflow:hidden">
+                <div style="height:100%;width:{int(score*100)}%;background:linear-gradient(90deg,#00ff41,#00ffff);box-shadow:0 0 30px #00ffff"></div>
             </div>
         </div>
-        <div style="border:3px solid #ffaa00;color:#ffaa00;padding:22px;border-radius:10px;background:rgba(60,35,0,0.7);box-shadow:0 0 30px #ffaa00;">
+        <div style="border:3px solid #ffaa00;color:#ffaa00;padding:25px;border-radius:12px;background:rgba(70,40,0,0.8);box-shadow:0 0 35px #ffaa00;">
             <b>DISPOSAL PROTOCOL &gt;&gt;</b> {disposal}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-# ===================== UI =====================
+# ===================== EPIC HERO =====================
 st.markdown("""
-<div class="hero-wrap">
-  <div class="hero-title">☣ WASTE_ID.EXE</div>
-  <div style="color:#00ff9d; font-size:1.5rem; letter-spacing:8px; text-align:center; margin-top:20px;">
+<div class="hero-container">
+  <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap;">
+    <span class="biohazard">☣</span>
+    <div class="hero-title">WASTE_ID.EXE</div>
+  </div>
+  <div style="text-align:center; color:#00ff9d; font-size:1.6rem; letter-spacing:8px; margin-top:15px;">
     REVOLUTIONARY NEURAL WASTE SYSTEM
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("---")
-
+# ===================== TABS =====================
 tab1, tab2 = st.tabs(["[ TARGET UPLOAD ]", "[ LIVE NEURAL CAPTURE ]"])
 
 with tab1:
@@ -222,8 +221,8 @@ with tab2:
         show_results(Image.open(camera))
 
 st.markdown("""
-<div style="text-align:center; margin:50px 0; color:#003300; font-size:1rem; letter-spacing:4px;">
-    WASTE_ID.EXE v5.0 — MATRIX REVOLUTION PROTOCOL ENGAGED<br>
-    ALL SYSTEMS NOMINAL • YOU ARE BEING WATCHED
+<div style="text-align:center; margin:60px 0 30px 0; color:#002200; font-size:1.1rem; letter-spacing:5px;">
+    WASTE_ID.EXE v5.1 — THE MATRIX REVOLUTION IS HERE<br>
+    YOU CANNOT ESCAPE THE SYSTEM
 </div>
 """, unsafe_allow_html=True)
