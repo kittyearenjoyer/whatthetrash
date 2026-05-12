@@ -192,7 +192,7 @@ st.markdown("""
 # ===================== MUSIK =====================
 st.subheader("🎵 MATRIX AUDIO CONTROL")
 music_url = st.text_input("Musik URL (optional)", 
-                         value="https://freesound.org/data/previews/612/612095_5674468-lq.mp3",
+                         value="https://archive.org/download/cyberpunk-rain-chillwave-ambient/Cyberpunk%20Rain%20-Chillwave%20Ambient.mp3",
                          help="Füge hier einen direkten Link zu einer .mp3 Datei ein")
 
 if st.button("▶️ START EPIC MATRIX SOUND", type="primary", use_container_width=True):
