@@ -7,7 +7,7 @@ MODEL_NAME = "yangy50/garbage-classification"
 
 st.set_page_config(page_title="WASTE_ID.EXE", page_icon="☣️", layout="wide")
 
-# ===================== EPIC DESIGN =====================
+# ===================== EPIC MATRIX DESIGN =====================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
@@ -22,27 +22,27 @@ html, body, [data-testid="stAppViewContainer"], .main, .block-container {
 
 #matrix-canvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -2; opacity: 0.5; mix-blend-mode: screen;
+    z-index: -2; opacity: 0.52; mix-blend-mode: screen;
 }
 
 body::after {
     content: ""; position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.08) 2px, rgba(0,255,65,0.08) 4px);
-    animation: scanroll 7s linear infinite;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.085) 2px, rgba(0,255,65,0.085) 4px);
+    animation: scanroll 6.5s linear infinite;
 }
-@keyframes scanroll { 0% { background-position: 0 0; } 100% { background-position: 0 700px; } }
+@keyframes scanroll { 0% { background-position: 0 0; } 100% { background-position: 0 800px; } }
 
 .hero-title {
     font-family: 'Orbitron', monospace;
     font-size: clamp(3rem, 7vw, 5rem);
     font-weight: 900;
-    letter-spacing: 15px;
-    text-shadow: 0 0 50px #00ff41, 0 0 100px #00ff41;
-    animation: glitch 1s infinite;
+    letter-spacing: 16px;
+    text-shadow: 0 0 60px #00ff41, 0 0 110px #00ff41;
+    animation: glitch 0.9s infinite;
 }
 @keyframes glitch {
-    0%,100% { text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; }
-    50% { text-shadow: -3px 0 #00ff41, 3px 0 #ffff00; }
+    0%,100% { text-shadow: 4px 0 #ff00ff, -4px 0 #00ffff; }
+    50% { text-shadow: -4px 0 #00ff41, 4px 0 #ffff00; }
 }
 </style>
 
@@ -54,28 +54,29 @@ body::after {
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
 let w, h, drops = [];
-const chars = "01アイウエオカキクケコ0123456789$@#";
+const chars = "01アイウエオカキクケコ0123456789$@#%&*█";
 
 function resize() {
     w = window.innerWidth; h = window.innerHeight;
     canvas.width = w; canvas.height = h;
-    drops = Array(Math.floor(w / 16)).fill(1);
+    drops = Array(Math.floor(w / 15)).fill(1);
 }
 resize();
 window.addEventListener('resize', resize);
 
 function draw() {
-    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillStyle = 'rgba(0,0,0,0.075)';
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = '#00ff41';
-    ctx.font = '15px monospace';
+    ctx.font = '16px monospace';
     for (let i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*16, drops[i]*16);
-        if (drops[i]*16 > h && Math.random() > 0.975) drops[i] = 0;
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i*15, drops[i]*15);
+        if (drops[i]*15 > h && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
     }
 }
-setInterval(draw, 35);
+setInterval(draw, 33);
 </script>
 """, unsafe_allow_html=True)
 
@@ -133,28 +134,26 @@ def show_results(image):
     </div>
     """, unsafe_allow_html=True)
 
-# ===================== UI =====================
+# ===================== UI + NEUER MUSIK LINK =====================
 st.markdown("""
-<div class="hero-wrap" style="border:3px solid #00ff41;padding:3rem;text-align:center;background:rgba(0,255,65,0.08);box-shadow:0 0 60px #00ff41">
+<div style="border:3px solid #00ff41;padding:3rem;text-align:center;background:rgba(0,255,65,0.08);box-shadow:0 0 70px #00ff41">
   <div class="hero-title">☣ WASTE_ID.EXE</div>
-  <div style="color:#00ff9d;letter-spacing:5px;margin-top:10px">MATRIX PROTOCOL v4.3</div>
+  <div style="color:#00ff9d;letter-spacing:6px;margin-top:15px">MATRIX PROTOCOL v4.4</div>
 </div>
 """, unsafe_allow_html=True)
 
-# ===================== MUSIK FIX =====================
 st.subheader("🎵 MATRIX AUDIO")
 
 col1, col2 = st.columns([3,1])
-
 with col1:
     music_url = st.text_input(
-        "Direkter MP3-Link",
-        value="https://archive.org/download/cyberpunk-rain-chillwave-ambient/Cyberpunk%20Rain%20-Chillwave%20Ambient.mp3",
-        help="Einfach einen direkten .mp3 Link hier einfügen"
+        "Musik-Link (MP3)",
+        value="https://archive.org/download/cyberpunk-ambient-rainy-night-walks/Cyberpunk%20Ambient%20-%20Rainy%20Night%20Walks.mp3",
+        help="Neuer Link: Cyberpunk Rainy Night Walks"
     )
 
 with col2:
-    volume = st.slider("Lautstärke", 0.0, 1.0, 0.35, 0.05)
+    volume = st.slider("Lautstärke", 0.0, 1.0, 0.40, 0.05)
 
 if st.button("▶️ START MATRIX SOUND", type="primary", use_container_width=True):
     st.markdown(f"""
@@ -162,17 +161,15 @@ if st.button("▶️ START MATRIX SOUND", type="primary", use_container_width=Tr
         var audio = document.getElementById('bg-music');
         audio.src = "{music_url}";
         audio.volume = {volume};
-        audio.play().then(() => {{
-            console.log("Music started successfully");
-        }}).catch(e => {{
-            console.log("Error:", e);
-            alert("Konnte Musik nicht abspielen. Klicke nochmal oder erlaube Audio in deinem Browser.");
+        audio.play().catch(err => {{
+            console.error(err);
+            alert("Audio konnte nicht gestartet werden. Versuche einen anderen Browser oder klicke nochmal.");
         }});
     </script>
     """, unsafe_allow_html=True)
-    st.success("🎧 Matrix Sound gestartet - genieße die Atmosphäre!")
+    st.success("Matrix Sound gestartet")
 
-if st.button("⏹ STOP SOUND"):
+if st.button("⏹ STOP SOUND", use_container_width=True):
     st.markdown("""
     <script>
         document.getElementById('bg-music').pause();
@@ -194,4 +191,4 @@ with tab2:
     if camera:
         show_results(Image.open(camera))
 
-st.caption("WASTE_ID.EXE — FULL MATRIX IMMERSION")
+st.caption("WASTE_ID.EXE — FULL CYBER IMMERSION")
